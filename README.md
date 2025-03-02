@@ -78,17 +78,12 @@ The script expects a JSON file with the following structure:
 * Device Names: Must match names in the testbed file.
 * VNIs: Keys mapping to lists of IP addresses (strings).
 
-
 ## Configuration
 The `CONFIG` dictionary at the top of the script defines:
 
 `DEVICE_TIMEOUT`: Connection timeout in seconds (default: 30).
 `VALID_LAYERS`: Supported layers (`['l2', 'l3']`).
 `BGP_REQUIRED_KEYS`: Expected BGP EVPN structure path.
-
-
-
-
 
 ## Sample Console Output
 Below is what you might see in the terminal when running the script (`python vxlan_vni_test.py`):
@@ -135,7 +130,6 @@ INFO:__main__:
 INFO:__main__:VNI 200 not found on device2
 INFO:__main__:Summary: 1/3 IP checks passed
 ```
-
 
 ## Notes on Output
 1. Logging Levels:
