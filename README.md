@@ -85,3 +85,69 @@ The `CONFIG` dictionary at the top of the script defines:
 `DEVICE_TIMEOUT`: Connection timeout in seconds (default: 30).
 `VALID_LAYERS`: Supported layers (`['l2', 'l3']`).
 `BGP_REQUIRED_KEYS`: Expected BGP EVPN structure path.
+
+
+
+
+
+## Sample Console Output
+Below is what you might see in the terminal when running the script (`python vxlan_vni_test.py`):
+
+```bash
+INFO:__main__: 
+================================================================================
+                    Connecting to device 'device1'                    
+================================================================================
+INFO:__main__:Successfully connected to device1
+INFO:__main__: 
+================================================================================
+                    Connecting to device 'device2'                    
+================================================================================
+INFO:__main__:Successfully connected to device2
+INFO:__main__:Successfully connected to 2 devices
+INFO:__main__: 
+================================================================================
+                    Gathering BGP EVPN data on 'device1'                    
+================================================================================
+INFO:__main__:Successfully gathered BGP EVPN data
+INFO:__main__: 
+================================================================================
+                    Gathering BGP EVPN data on 'device2'                    
+================================================================================
+INFO:__main__:Successfully gathered BGP EVPN data
+INFO:__main__:Collected BGP EVPN Data Summary:
+INFO:__main__:Total devices processed: 2
+INFO:__main__:Device device1: 1 RD entries found
+INFO:__main__:Device device2: 2 RD entries found
+DEBUG:__main__:Detailed BGP EVPN Data:
+  {'device1': {'instance': {'default': {'vrf': {'default': {'address_family': {'l2vpn evpn': {'rd': {'100': {'rd_vrf': '100', 'prefix': {'10.0.0.0/24': {}}}}}}}}}},
+   'device2': {'instance': {'default': {'vrf': {'default': {'address_family': {'l2vpn evpn': {'rd': {'300': {'rd_vrf': '300', 'prefix': {}}, '400': {'rd_vrf': '400', 'prefix': {}}}}}}}}}}
+INFO:__main__: 
+================================================================================
+                    Device device1: Analyzing VNI 100 (l2)                    
+================================================================================
+INFO:__main__:IP 10.0.0.1 found in VNI 100 on device1 (prefix: 10.0.0.0/24)
+WARNING:__main__:IP 10.0.0.2 not found in VNI 100 on device1
+INFO:__main__: 
+================================================================================
+                    Device device2: Analyzing VNI 200 (l2)                    
+================================================================================
+INFO:__main__:VNI 200 not found on device2
+INFO:__main__:Summary: 1/3 IP checks passed
+```
+
+
+## Notes on Output
+1. Logging Levels:
+    * INFO: Connection success, data summary, passed checks.
+    * WARNING: Failed IP checks.
+    * DEBUG: Detailed BGP data (only if logging level is set to DEBUG).
+    * ERROR: Would appear if connections or parsing failed (not shown here).
+
+2. pyATS Results:
+    * The self.failed call in check_vnis marks the test as failed since not all IPs passed.
+    * Individual steps use vni_step.passed or vni_step.failed for granular reporting.
+
+3. Variations:
+    * If all IPs matched, the summary would be "3/3 IP checks passed," and the test would end with self.passed.
+    * If a device connection failed, you’d see an ERROR log and a FAILED setup result, halting execution.
